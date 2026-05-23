@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bsiixueep0jt5" path="res://scenes+scripts/main_play_space.gd" id="1_wgdaw"]
 
-[node name="main play space" type="Node2D" unique_id=563117383]
+[node name="main play space" type="Node2D" unique_id=563117383 groups=["root save"]]
 script = ExtResource("1_wgdaw")
 
 [node name="spawn new cell" type="Button" parent="." unique_id=431551257]
@@ -14,7 +14,7 @@ text = "New Cell Spawner"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1751849252]
 offset_top = 608.0
-offset_right = 299.0
+offset_right = 449.0
 offset_bottom = 648.0
 
 [node name="save" type="Button" parent="HBoxContainer" unique_id=833222690]
@@ -22,11 +22,23 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "save"
 
+[node name="exit" type="Button" parent="HBoxContainer" unique_id=313855278]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "save & exit"
+
 [node name="load" type="Button" parent="HBoxContainer" unique_id=1573679326]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 text = "load"
 
+[node name="save timer" type="Timer" parent="." unique_id=1893304672]
+wait_time = 5.0
+autostart = true
+
 [connection signal="pressed" from="spawn new cell" to="." method="_on_spawn_new_cell_pressed"]
 [connection signal="pressed" from="HBoxContainer/save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="HBoxContainer/exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="HBoxContainer/load" to="." method="_on_load_pressed"]
+[connection signal="timeout" from="save timer" to="." method="_on_save_timer_timeout"]

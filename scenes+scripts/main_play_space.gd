@@ -6,14 +6,22 @@ var canPlace = true
 const cellSpawnerPreLoad = preload("res://scenes+scripts/cell spawner.tscn")
 const cellSpawnerEditorPreLoad = preload("res://scenes+scripts/cell_read_and_write.tscn")
 
+var autoSaveCounter = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	if GLOBAL.firstTimeOnSave:
+		print("FIRST TIME ON SAVE (saving now)")
+		save_game()
+	elif !GLOBAL.firstTimeOnSave:
+		load_game()
+		print("THIS SAVE WAS USED BEFOR(loading now)")
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	if Input.is_action_just_pressed("save"):
+		save_game()
 
 func startNewCellEditorFile():
 	return GLOBAL.createNewCellSpawnerFile()
@@ -47,7 +55,7 @@ func _on_load_pressed() -> void:
 
 
 func save_game():
-	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
+	var save_file = FileAccess.open(GLOBAL.currentSavePath, FileAccess.WRITE)
 	var save_nodes = get_tree().get_nodes_in_group("Persist")
 	for node in save_nodes:
 		# Check the node is an instanced scene so it can be instanced again during load.
@@ -71,7 +79,7 @@ func save_game():
 		
 
 func load_game():
-	if not FileAccess.file_exists("user://savegame.save"):
+	if not FileAccess.file_exists(GLOBAL.currentSavePath):
 		return # Error! We don't have a save to load.
 
 	# We need to revert the game state so we're not cloning objects
@@ -84,7 +92,7 @@ func load_game():
 
 	# Load the file line by line and process that dictionary to restore
 	# the object it represents.
-	var save_file = FileAccess.open("user://savegame.save", FileAccess.READ)
+	var save_file = FileAccess.open(GLOBAL.currentSavePath, FileAccess.READ)
 	while save_file.get_position() < save_file.get_length():
 		var json_string = save_file.get_line()
 
@@ -110,3 +118,15 @@ func load_game():
 			if i == "filename" or i == "parent" or i == "pos_x" or i == "pos_y":
 				continue
 			new_object.set(i, node_data[i])
+
+
+func _on_save_timer_timeout() -> void:
+	save_game()
+	autoSaveCounter += 1
+	print("autosaved",autoSaveCounter)
+
+
+func _on_exit_pressed() -> void:
+	print("saved and exited")
+	save_game()
+	get_tree().quit()

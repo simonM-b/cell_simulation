@@ -21,7 +21,7 @@ func open_file_in_window(filePart):
 func save_to_file(filePart,content):
 	var file = FileAccess.open("user://cells/"+str(filePart)+".txt", FileAccess.WRITE)
 	file.store_string(content)
-	print(content,"SAVED TO FILE SUPOSIDLEY")
+	print(content,"S")
 
 
 func _on_text_edit_text_changed() -> void:

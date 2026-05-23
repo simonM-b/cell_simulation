@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://dolpskqearydr"]
 
+[ext_resource type="Script" uid="uid://bctq258hl6xvc" path="res://scenes+scripts/startup.gd" id="1_7t6c1"]
+
 [node name="startup" type="Control" unique_id=2091961529]
 layout_mode = 3
 anchors_preset = 15
@@ -7,3 +9,40 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_7t6c1")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1208885269]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer" unique_id=282188469]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/CenterContainer" unique_id=1411479342]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/CenterContainer/VBoxContainer" unique_id=2130793259]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "CELL PROGRAMING GAME"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/CenterContainer/VBoxContainer" unique_id=1183632415]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="new save" type="Button" parent="MarginContainer/CenterContainer/VBoxContainer/VBoxContainer" unique_id=1236237018]
+layout_mode = 2
+text = "  New Save File  "
+
+[node name="load save" type="Button" parent="MarginContainer/CenterContainer/VBoxContainer/VBoxContainer" unique_id=218028213]
+layout_mode = 2
+text = "  Load Save File  "
+
+[node name="docs" type="Button" parent="MarginContainer/CenterContainer/VBoxContainer/VBoxContainer" unique_id=1977976978]
+layout_mode = 2
+text = "Docs"
+
+[connection signal="pressed" from="MarginContainer/CenterContainer/VBoxContainer/VBoxContainer/new save" to="." method="_on_new_save_pressed"]
+[connection signal="pressed" from="MarginContainer/CenterContainer/VBoxContainer/VBoxContainer/load save" to="." method="_on_load_save_pressed"]

@@ -43,16 +43,12 @@ func save():
 		"parent" : get_parent().get_path(),
 		"pos_x" : position.x,
 		"pos_y" : position.y,
-		"title" : titleName
+		"titleName" : titleName
 	}
 	return save_dict
 	
-	
-	
-	
-	
-	
-
 
 func _on_init_timeout() -> void:
+	print("added name to cell spawner")
+	print(titleName)
 	$"name edit".text = titleName
