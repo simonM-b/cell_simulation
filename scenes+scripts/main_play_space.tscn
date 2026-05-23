@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://b0ucdxwyjbhca"]
+
+[ext_resource type="Script" uid="uid://bsiixueep0jt5" path="res://scenes+scripts/main_play_space.gd" id="1_wgdaw"]
+
+[node name="main play space" type="Node2D" unique_id=563117383]
+script = ExtResource("1_wgdaw")
+
+[node name="spawn new cell" type="Button" parent="." unique_id=431551257]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "New Cell Spawner"
+
+[node name="spawners" type="Node2D" parent="." unique_id=1108554266]
+
+[connection signal="pressed" from="spawn new cell" to="." method="_on_spawn_new_cell_pressed"]

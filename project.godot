@@ -11,8 +11,17 @@ config_version=5
 [application]
 
 config/name="cell simulation"
+run/main_scene="uid://b0ucdxwyjbhca"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GLOBAL="*uid://bgxe5ub6ujpvv"
+
+[display]
+
+window/stretch/mode="canvas_items"
 
 [physics]
 

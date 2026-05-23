@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://cwy0s8tushcnl"]
+
+[ext_resource type="Texture2D" uid="uid://6je72kjqu0vx" path="res://icon.svg" id="1_s2ww1"]
+[ext_resource type="Script" uid="uid://dmuieycwc4pxi" path="res://scenes+scripts/cell_spawner.gd" id="1_vro81"]
+
+[node name="cell spawner" type="Node2D" unique_id=1906738730]
+script = ExtResource("1_vro81")
+
+[node name="sprite" type="Sprite2D" parent="." unique_id=610839850]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_s2ww1")
+
+[node name="name edit" type="LineEdit" parent="." unique_id=1239061849]
+offset_left = -80.0
+offset_top = 32.0
+offset_right = 80.26413
+offset_bottom = 63.0
+theme_override_font_sizes/font_size = 16
+placeholder_text = "enter name here"
+alignment = 1
+max_length = 14
+
+[node name="move the node with mouse" type="Button" parent="." unique_id=1603203649]
+offset_left = -80.0
+offset_top = 11.0
+offset_right = -1.0
+offset_bottom = 31.0
+theme_override_font_sizes/font_size = 8
+text = "click here to move"
+
+[connection signal="text_changed" from="name edit" to="." method="_on_name_edit_text_changed"]
+[connection signal="pressed" from="move the node with mouse" to="." method="_on_move_the_node_with_mouse_pressed"]
