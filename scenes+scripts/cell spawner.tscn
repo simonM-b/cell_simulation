@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://6je72kjqu0vx" path="res://icon.svg" id="1_s2ww1"]
 [ext_resource type="Script" uid="uid://dmuieycwc4pxi" path="res://scenes+scripts/cell_spawner.gd" id="1_vro81"]
 
-[node name="cell spawner" type="Node2D" unique_id=1906738730]
+[node name="cell spawner" type="Node2D" unique_id=1906738730 groups=["Persist"]]
 script = ExtResource("1_vro81")
 
 [node name="sprite" type="Sprite2D" parent="." unique_id=610839850]
@@ -28,5 +28,11 @@ offset_bottom = 31.0
 theme_override_font_sizes/font_size = 8
 text = "click here to move"
 
+[node name="init" type="Timer" parent="." unique_id=1771777805]
+wait_time = 0.2
+one_shot = true
+autostart = true
+
 [connection signal="text_changed" from="name edit" to="." method="_on_name_edit_text_changed"]
 [connection signal="pressed" from="move the node with mouse" to="." method="_on_move_the_node_with_mouse_pressed"]
+[connection signal="timeout" from="init" to="." method="_on_init_timeout"]

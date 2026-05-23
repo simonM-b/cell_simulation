@@ -1,6 +1,7 @@
 extends Node2D
 
 var followCursor = false
+var titleName = ""
 
 
 # Called when the node enters the scene tree for the first time.
@@ -31,11 +32,27 @@ func _on_move_the_node_with_mouse_pressed() -> void:
 func _on_name_edit_text_changed(new_text: String) -> void:
 	for i in get_children():
 		if i.is_in_group("cell spawn editor"):
+			titleName = str(new_text)
 			i.title = str(new_text)
 			
 			
 			
-			
-			
-			
-			
+func save():
+	var save_dict = {
+		"filename" : get_scene_file_path(),
+		"parent" : get_parent().get_path(),
+		"pos_x" : position.x,
+		"pos_y" : position.y,
+		"title" : titleName
+	}
+	return save_dict
+	
+	
+	
+	
+	
+	
+
+
+func _on_init_timeout() -> void:
+	$"name edit".text = titleName

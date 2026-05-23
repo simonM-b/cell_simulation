@@ -12,4 +12,21 @@ text = "New Cell Spawner"
 
 [node name="spawners" type="Node2D" parent="." unique_id=1108554266]
 
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1751849252]
+offset_top = 608.0
+offset_right = 299.0
+offset_bottom = 648.0
+
+[node name="save" type="Button" parent="HBoxContainer" unique_id=833222690]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "save"
+
+[node name="load" type="Button" parent="HBoxContainer" unique_id=1573679326]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "load"
+
 [connection signal="pressed" from="spawn new cell" to="." method="_on_spawn_new_cell_pressed"]
+[connection signal="pressed" from="HBoxContainer/save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="HBoxContainer/load" to="." method="_on_load_pressed"]

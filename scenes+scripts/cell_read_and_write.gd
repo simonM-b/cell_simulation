@@ -9,7 +9,8 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	#print(fileOpendName)
+	$MarginContainer/ScrollContainer/VBoxContainer/filefind.text = fileOpendName
 
 
 func open_file_in_window(filePart):
@@ -25,3 +26,20 @@ func save_to_file(filePart,content):
 
 func _on_text_edit_text_changed() -> void:
 	save_to_file(fileOpendName,textEdit.text)
+
+
+func save():
+	var save_dict = {
+		"filename" : get_scene_file_path(),
+		"parent" : get_parent().get_path(),
+		"pos_x" : position.x,
+		"pos_y" : position.y,
+		"title" : title,
+		"fileOpendName" : fileOpendName
+	}
+	return save_dict
+
+
+func _on_open_file_if_not_called_timeout() -> void:
+	print("loaded text")
+	open_file_in_window(fileOpendName)
