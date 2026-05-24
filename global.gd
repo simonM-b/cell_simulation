@@ -2,6 +2,7 @@ extends Node
 
 
 var currentSavePath = "faultydefultbackup"
+var currentScriptSavePath = "null"
 var firstTimeOnSave = true
 
 # Called when the node enters the scene tree for the first time.

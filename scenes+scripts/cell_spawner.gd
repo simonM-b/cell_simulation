@@ -37,7 +37,7 @@ func runFile():
 	for i in $cells.get_children():
 		i.queue_free()
 	
-	var file = FileAccess.open("user://cells/"+str(GLOBAL.currentSavePath)+".slivercs", FileAccess.READ)
+	var file = FileAccess.open("user://cells/"+str(GLOBAL.currentScriptSavePath)+".slivercs", FileAccess.READ)
 	var content = file.get_as_text()
 	while not file.eof_reached():
 		var line = file.get_line()
@@ -138,6 +138,7 @@ func _on_name_edit_text_changed(new_text: String) -> void:
 			
 			
 func save():
+	print("save called")
 	var save_dict = {
 		"filename" : get_scene_file_path(),
 		"parent" : get_parent().get_path(),

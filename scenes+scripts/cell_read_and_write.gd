@@ -32,6 +32,7 @@ func _on_text_edit_text_changed() -> void:
 
 
 func save():
+	print("save called")
 	var save_dict = {
 		"filename" : get_scene_file_path(),
 		"parent" : get_parent().get_path(),
@@ -45,7 +46,7 @@ func save():
 
 func _on_open_file_if_not_called_timeout() -> void:
 	print("loaded text")
-	GLOBAL.currentSavePath = fileOpendName
+	GLOBAL.currentScriptSavePath = fileOpendName
 	open_file_in_window(fileOpendName)
 
 
