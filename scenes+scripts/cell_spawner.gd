@@ -4,6 +4,8 @@ var followCursor = false
 var titleName = ""
 
 var spawnedCell = false
+var cellMoveAmount = 40
+var waitTimeNextLine = 0
 
 const cellPreload = preload("res://scenes+scripts/cell.tscn")
 
@@ -18,34 +20,18 @@ var colors = [
 ["BLACK",Color.BLACK]
 ]
 
+
 var listOfCommands = [
 	["spawnCell()",Callable(self, "spawnCell")],
-	["setColor(",Callable(self, "setColor")]
+	["setColor(",Callable(self, "setColor")],
+	["randomMove()",Callable(self, "randomMove")],
+	["sleep(",Callable(self, "sleep")]
 ]
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
-
-func spawnCell(line):
-	print("cell spawned")
-	spawnedCell = cellPreload.instantiate()
-	$cells.add_child(spawnedCell)
-
-func setColor(line):
-	print("color set")
-	for i in colors:
-		if i[0] in line:
-			print("THE COLOR", i)
-			spawnedCell.modulate = i[1]
-			
-	
-	#if spawnedCell:
-	#	print("color worked")
-	#	spawnedCell.modulate = color
-	#else:
-	#	print("YOU NEED TO SPAWN IN A CELL USE spawnCell()")
+	randomize()
 
 func runFile():
 	for i in $cells.get_children():
@@ -55,12 +41,73 @@ func runFile():
 	var content = file.get_as_text()
 	while not file.eof_reached():
 		var line = file.get_line()
+		
+		await wait(waitTimeNextLine)
 		#print("Current line: ", line)
 		for i in listOfCommands:
 			#print(i)
 			if i[0] in line:
+				waitTimeNextLine = 0
 				i[1].call(line)
+				break
 
+#-------------------------------------------------
+
+func spawnCell(line):
+	print("cell spawned")
+	spawnedCell = cellPreload.instantiate()
+	$cells.add_child(spawnedCell)
+
+func setColor(line):
+	if spawnedCell:
+		print("color set")
+		for i in colors:
+			if i[0] in line:
+				#print("THE COLOR", i)
+				spawnedCell.modulate = i[1]
+	else:
+		print("error no cell")
+			
+			
+func randomMove(line):
+	print("cell moved")
+	var moveDir = ["N","S","W","E"]
+	var randomDir = moveDir[randi_range(0, 3)]
+	if spawnedCell:
+		if randomDir == "N":
+			spawnedCell.position.y -= cellMoveAmount
+		elif randomDir == "S":
+			spawnedCell.position.y += cellMoveAmount
+		elif randomDir == "W":
+			spawnedCell.position.x -= cellMoveAmount
+		elif randomDir == "E":
+			spawnedCell.position.x += cellMoveAmount
+	else:
+		print("error no cell")
+
+func getNumberValInLine4digits(line):
+	var regex = RegEx.new()
+	regex.compile("[0-9]{1,4}")
+	var result = regex.search(str(line))
+	if result:
+		return int(result.get_string())
+	else:
+		return 0
+		
+func sleep(line):
+	if spawnedCell:
+		waitTimeNextLine = getNumberValInLine4digits(line)
+		print("sleeping",waitTimeNextLine)
+	else:
+		print("error no cell")
+		
+		
+#-------------------------------------------------
+
+func wait(seconds: float) -> void:
+	#print("WWW waiting",seconds)
+	await get_tree().create_timer(seconds).timeout
+	#await wait(1)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

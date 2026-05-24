@@ -7,6 +7,7 @@
 radius = 400.0
 
 [node name="cell" type="Sprite2D" unique_id=1559009110 groups=["cell"]]
+editor_description = "20 px"
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("1_ohvt7")
 script = ExtResource("2_k32v7")
