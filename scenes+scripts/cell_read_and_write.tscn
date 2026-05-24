@@ -5,8 +5,8 @@
 [node name="cell spawner editor" type="Window" unique_id=2060024470 groups=["Persist", "cell spawn editor"]]
 oversampling_override = 1.0
 title = "No title"
-position = Vector2i(0, 36)
-size = Vector2i(300, 225)
+initial_position = 1
+size = Vector2i(300, 350)
 minimize_disabled = true
 maximize_disabled = true
 script = ExtResource("1_7qx57")
@@ -37,9 +37,13 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=1503517622]
+[node name="open docs" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=2045606322]
 layout_mode = 2
-text = "save"
+text = "open docs"
+
+[node name="run file" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=29418728]
+layout_mode = 2
+text = "run file"
 
 [node name="filefind" type="LineEdit" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=858462554]
 layout_mode = 2
@@ -52,4 +56,6 @@ one_shot = true
 autostart = true
 
 [connection signal="text_changed" from="MarginContainer/ScrollContainer/VBoxContainer/TextEdit" to="." method="_on_text_edit_text_changed"]
+[connection signal="pressed" from="MarginContainer/ScrollContainer/VBoxContainer/open docs" to="." method="_on_open_docs_pressed"]
+[connection signal="pressed" from="MarginContainer/ScrollContainer/VBoxContainer/run file" to="." method="_on_run_file_pressed"]
 [connection signal="timeout" from="open file if not called" to="." method="_on_open_file_if_not_called_timeout"]

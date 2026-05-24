@@ -15,7 +15,7 @@ func _process(delta: float) -> void:
 	
 func createNewCellSpawnerFile(): #creates a new file and returns the path of that file
 	var timeDateSigniture = str(Time.get_unix_time_from_system())+"_"+str(Time.get_date_string_from_system())
-	var path = "user://cells/"+timeDateSigniture+".txt"
+	var path = "user://cells/"+timeDateSigniture+".slivercs"
 	create_file(path)
 	return timeDateSigniture
 	

@@ -1,0 +1,200 @@
+[gd_scene format=3 uid="uid://ckm1hc0j8ffcv"]
+
+[ext_resource type="Script" uid="uid://b1vpomgsu31x3" path="res://scenes+scripts/docs.gd" id="1_0svcr"]
+[ext_resource type="Script" uid="uid://dbap0gqox0ty1" path="res://addons/markdownlabel/markdownlabel.gd" id="1_q4iaq"]
+[ext_resource type="Script" uid="uid://dcx7crs23nf4" path="res://addons/markdownlabel/header_formats/h1_format.gd" id="2_0svcr"]
+[ext_resource type="Script" uid="uid://d0sin64i4v3op" path="res://addons/markdownlabel/header_formats/h2_format.gd" id="3_0kenp"]
+[ext_resource type="Script" uid="uid://dlok0dv1tq2bf" path="res://addons/markdownlabel/header_formats/h3_format.gd" id="4_oklfv"]
+[ext_resource type="Script" uid="uid://bayuh2vafablg" path="res://addons/markdownlabel/header_formats/h4_format.gd" id="5_p4pfe"]
+[ext_resource type="Script" uid="uid://dfr1w7u3jgni3" path="res://addons/markdownlabel/header_formats/h5_format.gd" id="6_f7uin"]
+[ext_resource type="Script" uid="uid://bsi6dexoofpe6" path="res://addons/markdownlabel/header_formats/h6_format.gd" id="7_4hq0q"]
+
+[sub_resource type="Resource" id="Resource_rddau"]
+resource_local_to_scene = true
+script = ExtResource("2_0svcr")
+
+[sub_resource type="Resource" id="Resource_xjuw1"]
+resource_local_to_scene = true
+script = ExtResource("3_0kenp")
+
+[sub_resource type="Resource" id="Resource_s47yf"]
+resource_local_to_scene = true
+script = ExtResource("4_oklfv")
+
+[sub_resource type="Resource" id="Resource_um8gd"]
+resource_local_to_scene = true
+script = ExtResource("5_p4pfe")
+
+[sub_resource type="Resource" id="Resource_m7grx"]
+resource_local_to_scene = true
+script = ExtResource("6_f7uin")
+
+[sub_resource type="Resource" id="Resource_jfmf6"]
+resource_local_to_scene = true
+script = ExtResource("7_4hq0q")
+
+[node name="docs" type="Window" unique_id=430411483]
+oversampling_override = 1.0
+title = "docs"
+initial_position = 1
+size = Vector2i(400, 500)
+script = ExtResource("1_0svcr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1910185464]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="open file in file manager" type="Button" parent="VBoxContainer" unique_id=1317866384]
+layout_mode = 2
+text = "open file in file manager"
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=986569836]
+layout_mode = 2
+size_flags_vertical = 8
+text = "!!! opening in file manager is recomended for a better viewing experience !!!"
+autowrap_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1868858899]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="MarkdownLabel" type="RichTextLabel" parent="VBoxContainer/MarginContainer" unique_id=2103567625]
+layout_mode = 2
+bbcode_enabled = true
+script = ExtResource("1_q4iaq")
+markdown_text = "# .slivercs documentation
+
+## What is .slivercs file ?
+
+slivercs stands for “sliver cell script”. The slivercs file extension is primarily used in sliverofstraw’s cell simulation game. The file extension does not do anything on its own, but when opened when opened in the previously mentioned game, the content inside of the file acts as instructions for objects called “cells” in the game.
+
+This script is atached to an object called a \"cell spawner\" that spawns in one or more cell object/s with the instructions under the spawnCell() function being copied to the cell.
+
+Here is an example of sliver cell script
+
+```
+spawnCell()
+
+setColor(GREEN)
+setLifespan(1,MINUTE)
+
+while alive():
+    randomMove()
+    if touchingOtherCell():
+        meiosisDuplicate()
+    ;
+; 
+```
+
+## Important things to note
+
+- In slivercs you do not need to use indentation but it is recomended for readability.
+  
+- slivercs does rely on whitespace for core function.
+  
+- slivercs is newline terminated
+  
+- You canot make your own functions (for now)
+  
+- You cannot make your own variables (for now)
+  
+
+---
+
+## Comments
+
+Comments are made with the # symbol. Comments will be ingored in the instructions of the \"cell\". Comments here work the same as in python.
+
+**Example code:**
+
+```
+#this is a comment and will be ingnored by the cell
+```
+
+---
+
+# Init:
+
+## spawnCell()
+
+This function spawns a \"cell\" object under the \"cell spawner\" object. Any code underneath this function is instructions for the \"cell\" object.
+
+**Example code:**
+
+```
+spawnCell() #spawns in a cell
+
+#other code goes here
+```
+
+---
+
+# Set premade variables:
+
+## setColor(x)
+
+You can replace x with a color and the \"cell\" will change color to the inputed color. The defult color is white.
+
+**list of colors that you can replace x with:**
+
+- RED
+  
+- ORANGE
+  
+- YELLOW
+  
+- GREEN
+  
+- BLUE
+  
+- LAVENDER
+  
+- WHITE
+  
+- BLACK
+  
+
+**Example code:**
+
+```
+spawnCell()
+
+setColor(GREEN) #sets the color of the spawned cell to green
+```
+
+## setLifespan(t,u)
+
+You have to replace t with a number and you can replace u with a time unit. The \"cell\" will delete or \"kill\" it self after the specified time.
+
+**list of time units:**
+
+- SECOND
+  
+- MINUTE
+  
+
+**Example code:**
+
+```
+spawnCell()
+
+setColor(GREEN)
+setLifespan(45,SECOND) #the cell deletes it self after 45 seconds
+```"
+h1 = SubResource("Resource_rddau")
+h2 = SubResource("Resource_xjuw1")
+h3 = SubResource("Resource_s47yf")
+h4 = SubResource("Resource_um8gd")
+h5 = SubResource("Resource_m7grx")
+h6 = SubResource("Resource_jfmf6")
+metadata/_custom_type_script = "uid://dbap0gqox0ty1"
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="pressed" from="VBoxContainer/open file in file manager" to="." method="_on_open_file_in_file_manager_pressed"]

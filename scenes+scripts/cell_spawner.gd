@@ -3,10 +3,63 @@ extends Node2D
 var followCursor = false
 var titleName = ""
 
+var spawnedCell = false
+
+const cellPreload = preload("res://scenes+scripts/cell.tscn")
+
+var colors = [
+["RED", Color.RED], 
+["ORANGE",Color.ORANGE], 
+["YELLOW",Color.YELLOW],
+["GREEN",Color.GREEN],
+["BLUE",Color.BLUE],
+["LAVENDER",Color.PURPLE],
+["WHITE",Color.WHITE],
+["BLACK",Color.BLACK]
+]
+
+var listOfCommands = [
+	["spawnCell()",Callable(self, "spawnCell")],
+	["setColor(",Callable(self, "setColor")]
+]
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
+
+func spawnCell(line):
+	print("cell spawned")
+	spawnedCell = cellPreload.instantiate()
+	$cells.add_child(spawnedCell)
+
+func setColor(line):
+	print("color set")
+	for i in colors:
+		if i[0] in line:
+			print("THE COLOR", i)
+			spawnedCell.modulate = i[1]
+			
+	
+	#if spawnedCell:
+	#	print("color worked")
+	#	spawnedCell.modulate = color
+	#else:
+	#	print("YOU NEED TO SPAWN IN A CELL USE spawnCell()")
+
+func runFile():
+	for i in $cells.get_children():
+		i.queue_free()
+	
+	var file = FileAccess.open("user://cells/"+str(GLOBAL.currentSavePath)+".slivercs", FileAccess.READ)
+	var content = file.get_as_text()
+	while not file.eof_reached():
+		var line = file.get_line()
+		#print("Current line: ", line)
+		for i in listOfCommands:
+			#print(i)
+			if i[0] in line:
+				i[1].call(line)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -1,0 +1,4 @@
+{"filename":"res://scenes+scripts/cell spawner.tscn","parent":"/root/main play space/spawners","pos_x":366.0,"pos_y":141.0,"titleName":""}
+{"fileOpendName":"1779593002.89356_2026-05-23","filename":"res://scenes+scripts/cell_read_and_write.tscn","parent":"/root/main play space/spawners/cell spawner","pos_x":692,"pos_y":198,"title":"No title"}
+{"filename":"res://scenes+scripts/cell spawner.tscn","parent":"/root/main play space/spawners","pos_x":160.0,"pos_y":381.0,"titleName":""}
+{"fileOpendName":"1779597937.1516_2026-05-24","filename":"res://scenes+scripts/cell_read_and_write.tscn","parent":"/root/main play space/spawners/@Node2D@12","pos_x":439,"pos_y":148,"title":"No title"}

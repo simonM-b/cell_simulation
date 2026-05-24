@@ -13,7 +13,7 @@ config_version=5
 config/name="cell simulation"
 run/main_scene="uid://dolpskqearydr"
 config/features=PackedStringArray("4.6", "Mobile")
-config/icon="res://icon.svg"
+config/icon="res://images/icon.svg"
 
 [autoload]
 
@@ -23,6 +23,10 @@ SAVE="*uid://ddw62x1i1elru"
 [display]
 
 window/stretch/mode="canvas_items"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/markdownlabel/plugin.cfg")
 
 [input]
 

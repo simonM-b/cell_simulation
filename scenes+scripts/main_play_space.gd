@@ -13,9 +13,11 @@ func _ready() -> void:
 	if GLOBAL.firstTimeOnSave:
 		print("FIRST TIME ON SAVE (saving now)")
 		save_game()
+		print(GLOBAL.currentSavePath)
 	elif !GLOBAL.firstTimeOnSave:
 		load_game()
 		print("THIS SAVE WAS USED BEFOR(loading now)")
+		print(GLOBAL.currentSavePath)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

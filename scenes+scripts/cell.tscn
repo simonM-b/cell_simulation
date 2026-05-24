@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://csyjdk1l612hh"]
+
+[ext_resource type="Texture2D" uid="uid://bngc5owydprap" path="res://images/white-circle-svgrepo-com.svg" id="1_ohvt7"]
+[ext_resource type="Script" uid="uid://cqrhlsahs28vi" path="res://scenes+scripts/cell.gd" id="2_k32v7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k32v7"]
+radius = 400.0
+
+[node name="cell" type="Sprite2D" unique_id=1559009110 groups=["cell"]]
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("1_ohvt7")
+script = ExtResource("2_k32v7")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1297932401]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1170085075]
+shape = SubResource("CircleShape2D_k32v7")

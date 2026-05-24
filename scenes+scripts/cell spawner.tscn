@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cwy0s8tushcnl"]
 
-[ext_resource type="Texture2D" uid="uid://6je72kjqu0vx" path="res://icon.svg" id="1_s2ww1"]
+[ext_resource type="Texture2D" uid="uid://6je72kjqu0vx" path="res://images/icon.svg" id="1_s2ww1"]
 [ext_resource type="Script" uid="uid://dmuieycwc4pxi" path="res://scenes+scripts/cell_spawner.gd" id="1_vro81"]
 
 [node name="cell spawner" type="Node2D" unique_id=1906738730 groups=["Persist"]]
@@ -32,6 +32,8 @@ text = "click here to move"
 wait_time = 0.3
 one_shot = true
 autostart = true
+
+[node name="cells" type="Node2D" parent="." unique_id=941735315]
 
 [connection signal="text_changed" from="name edit" to="." method="_on_name_edit_text_changed"]
 [connection signal="pressed" from="move the node with mouse" to="." method="_on_move_the_node_with_mouse_pressed"]
