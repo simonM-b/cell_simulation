@@ -29,10 +29,11 @@ func startNewCellEditorFile():
 	return GLOBAL.createNewCellSpawnerFile()
 
 func cellInitSpawningProcedure():
+	var file = startNewCellEditorFile()
 	var cellSpawner = cellSpawnerPreLoad.instantiate()
 	cellSpawnerGroup.add_child(cellSpawner)
 	cellSpawner.followCursor = true
-	var file = startNewCellEditorFile()
+	cellSpawner.file = file
 	print(file)
 	var cellSpawnerEditor = cellSpawnerEditorPreLoad.instantiate()
 	cellSpawner.add_child(cellSpawnerEditor)

@@ -82,15 +82,12 @@ Here is an example of sliver cell script
 ```
 spawnCell()
 
-setColor(GREEN)
-setLifespan(1,MINUTE)
-
-while alive():
-    randomMove()
-    if touchingOtherCell():
-        meiosisDuplicate()
-    ;
-; 
+whileAlive@:
+    east()
+        if(touchingOtherCell()):
+        setColor(ORANGE)
+    if;
+    sleep(1)
 ```
 
 ## Important things to note
@@ -108,7 +105,7 @@ while alive():
 
 ---
 
-## Comments
+## Comments NOT WORKING AT THE MOMENT
 
 Comments are made with the # symbol. Comments will be ingored in the instructions of the \"cell\". Comments here work the same as in python.
 
@@ -124,7 +121,7 @@ Comments are made with the # symbol. Comments will be ingored in the instruction
 
 ## spawnCell()
 
-This function spawns a \"cell\" object under the \"cell spawner\" object. Any code underneath this function is instructions for the \"cell\" object.
+This function spawns a \"cell\" object under the \"cell spawner\" object. Any code underneath this function is instructions for the \"cell\" object. This function should only be called once in the script.
 
 **Example code:**
 
@@ -169,16 +166,17 @@ spawnCell()
 setColor(GREEN) #sets the color of the spawned cell to green
 ```
 
-## setLifespan(t,u)
+---
 
-You have to replace t with a number and you can replace u with a time unit. The \"cell\" will delete or \"kill\" it self after the specified time.
+# Meta:
 
-**list of time units:**
+## sleep(s)
 
-- SECOND
-  
-- MINUTE
-  
+you have to replace s with a number. s is the amount of seconds that the program will wait untill doing the next step. You can put up to 4 digits(0-9) in the function.
+
+> ✅sleep(9999)
+> 
+> ❌sleep(99999)
 
 **Example code:**
 
@@ -186,8 +184,68 @@ You have to replace t with a number and you can replace u with a time unit. The 
 spawnCell()
 
 setColor(GREEN)
-setLifespan(45,SECOND) #the cell deletes it self after 45 seconds
-```"
+sleep(1) #waits 1 seconds untill the next line is run
+setColor(RED)
+```
+
+## whileAlive@:
+
+runs the code below itself untill the cell is not alive
+
+**Example code:**
+
+```
+spawnCell()
+
+whileAlive()@: #if the cell is alive it runs the code down delow
+    randomMove()
+    sleep(1)
+```
+
+## if(condition()):
+
+## if;
+
+If the condition() is true than it runs the code underneath it to if;
+
+**Example code:**
+
+```
+spawnCell()
+
+whileAlive@:
+    east()
+        if(touchingOtherCell()):
+        setColor(ORANGE)
+    if;
+    sleep(1)
+```
+
+---
+
+# Moving functions:
+
+## randomMove()
+
+Moves the \"cell\" in a random direction 40 pixels.
+
+**Example code:**
+
+```
+spawnCell()
+
+randomMove()# moves the cell in a random direction 40 pixels
+sleep(1)
+randomMove()# moves the cell in a random direction 40 pixels
+```
+
+---
+
+# Returns:
+
+## touchingOtherCell()
+
+returns true if touching other cells"
 h1 = SubResource("Resource_rddau")
 h2 = SubResource("Resource_xjuw1")
 h3 = SubResource("Resource_s47yf")

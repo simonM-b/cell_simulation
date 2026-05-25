@@ -8,9 +8,14 @@ var cellMoveAmount = 40
 var waitTimeNextLine = 0
 var isTouchingOtherCell = false
 
+var file = "test"
+
 const cellPreload = preload("res://scenes+scripts/cell.tscn")
 
 var listOfLines = []
+
+var london = true #makes sure that the foreveryloop has time to stop so it doesn't interfeet with the next sycle
+var buttonAlreadyPressed = false
 
 var colors = [
 ["RED", Color.RED], 
@@ -27,7 +32,15 @@ var possibleIfs = [
 	["touchingOtherCell()):",isTouchingOtherCell]
 ]
 
-var ifIndex = [
+var ifStartsIndex = [
+	
+]
+
+var ifEndsIndex = [
+	
+]
+
+var ifPairs = [
 	
 ]
 
@@ -42,7 +55,12 @@ var listOfCommands = [
 	["randomMove()",Callable(self, "randomMove")],
 	["sleep(",Callable(self, "sleep")],
 	["whileAlive@:",Callable(self, "whileAlive")],
-	["if(",Callable(self, "ifGameAsk")]
+	["if(",Callable(self, "ifGameAsk")],
+	["if;",Callable(self, "nothing")],
+	["north()",Callable(self, "north")],
+	["south()",Callable(self, "south")],
+	["west()",Callable(self, "west")],
+	["east()",Callable(self, "east")]
 ]
 
 
@@ -50,19 +68,24 @@ var listOfCommands = [
 func _ready() -> void:
 	randomize()
 
+
 func resetValuesAndStartAnew():
+	for i in $cells.get_children():
+		i.queue_free()
+		
 	whileAliveOn = false
 	continueThis.clear()
 	waitTimeNextLine = 0
 	isTouchingOtherCell = false
 	spawnedCell = false
 	listOfLines.clear()
-	
-	for i in $cells.get_children():
-		i.queue_free()
+	ifStartsIndex.clear()
+	ifEndsIndex.clear()
+	ifPairs.clear()
+	waitTimeNextLine = 0
 
 func runLinesFromFile(from,to):
-	if to != "all":
+	if str(to) != "all":
 		#print("running all lines")
 		var id = 0
 		for line in listOfLines:
@@ -73,9 +96,11 @@ func runLinesFromFile(from,to):
 				#print("Current line: ", line)
 				for command in listOfCommands:
 					#print(i)
+					waitTimeNextLine = 0
 					if command[0] in line:
 						waitTimeNextLine = 0
 						command[1].call(line,id)
+						print(waitTimeNextLine)
 						break
 			id += 1
 	else:
@@ -83,30 +108,100 @@ func runLinesFromFile(from,to):
 		var id = 0
 		for line in listOfLines:
 			if id >= from:
-				#print(line)
-				await wait(waitTimeNextLine)
-				waitTimeNextLine = 0
-				#print("Current line: ", line)
-				for command in listOfCommands:
-					#print(i)
-					if command[0] in line:
+				if !ifPairs == []:
+					for ifLine in ifPairs:
+						if id >= ifLine[0]+1 and id <= ifLine[1]:
+							pass
+						else:
+							#print(line)
+							await wait(waitTimeNextLine)
+							waitTimeNextLine = 0
+							#print("Current line: ", line)
+							for command in listOfCommands:  
+								waitTimeNextLine = 0                                                                                                                                                                                                                                                                                      
+								#print(i)
+								if command[0] in line:
+									waitTimeNextLine = 0
+									command[1].call(line,id)
+									print(waitTimeNextLine)
+									break
+				else:
+					#print(line)
+					await wait(waitTimeNextLine)
+					waitTimeNextLine = 0
+					#print("Current line: ", line)
+					for command in listOfCommands:
 						waitTimeNextLine = 0
-						command[1].call(line,id)
-						break
+						#print(i)
+						if command[0] in line:
+							waitTimeNextLine = 0
+							command[1].call(line,id)
+							print(waitTimeNextLine)
+							break
 			id += 1
 
+func getIfIndex():
+	var id = 0
+	for line in listOfLines:
+		if listOfCommands[6][0] in line:
+			ifStartsIndex.append(id)
+		elif listOfCommands[7][0] in line:
+			ifEndsIndex.append(id)
+		id += 1
+			
+
 func runFile():
-	resetValuesAndStartAnew()
+	if !buttonAlreadyPressed:
+		buttonAlreadyPressed = true
+		resetValuesAndStartAnew()
+		while !london:
+			await wait(0.1)
+		buttonAlreadyPressed = false
+			
+		var loadFile = FileAccess.open("user://cells/"+str(file)+".slivercs", FileAccess.READ)
+		var content = loadFile.get_as_text()
+		while not loadFile.eof_reached():
+			var fileLine = loadFile.get_line()
+			listOfLines.append(fileLine)
 	
-	var file = FileAccess.open("user://cells/"+str(GLOBAL.currentScriptSavePath)+".slivercs", FileAccess.READ)
-	var content = file.get_as_text()
-	while not file.eof_reached():
-		var fileLine = file.get_line()
-		listOfLines.append(fileLine)
-	
+	getIfIndex()
+	ifPairs = pairClosestValues(ifStartsIndex,ifEndsIndex)
+	print(ifStartsIndex)
+	print(ifEndsIndex)
+	print(ifPairs)
 	runLinesFromFile(0,"all")
 
+func pairClosestValues(list_a, list_b):
+	var a_sorted = list_a.duplicate()
+	var b_sorted = list_b.duplicate()
+	
+	a_sorted.sort()
+	b_sorted.sort()
+	
+	var result = []
+	
+	for i in range(a_sorted.size()):
+		result.append([a_sorted[i], b_sorted[i]])
+		
+	return result
+
 #START-------------------------------------------------START
+
+func north(line, id):
+	if spawnedCell:
+		spawnedCell.moveN()
+
+func south(line, id):
+	if spawnedCell:
+		spawnedCell.moveS()
+	
+func west(line, id):
+	if spawnedCell:
+		spawnedCell.moveW()
+
+func east(line, id):
+	if spawnedCell:
+		spawnedCell.moveE()
 
 func nothing(line,id):
 	return ""
@@ -121,8 +216,14 @@ func ifGameAsk(line,id):
 		print("if runing")
 		for i in possibleIfs:
 			if i[0] in line:
-				if i[1]:
-					pass
+				#print("correc t")
+				#print(i[1])
+				if i[1] == true:
+					#print("DETECTED")
+					for pair in ifPairs:
+						if pair[0] == id:
+							#print("WORKING IF IF IF IF IF")
+							await runLinesFromFile(pair[0]+1,pair[1]+1)
 	else:
 		print("error no cell")
 
@@ -131,8 +232,11 @@ func ifGameAsk(line,id):
 func whileAlive(line,id):
 	if spawnedCell:
 		print("while alive")
-		while spawnedCell:
+		while spawnedCell :
+			london = false
 			await runLinesFromFile(id+1,"all")
+		london = true
+		print("ENDED")
 	else:
 		print("running while")
 
@@ -200,6 +304,10 @@ func _process(delta: float) -> void:
 		global_position = get_global_mouse_position()
 	if spawnedCell:
 		isTouchingOtherCell = spawnedCell.isTouchingOtherCell
+		
+	possibleIfs = [
+	["touchingOtherCell()):",isTouchingOtherCell]
+		]
 
 func _input(event):
 	if event is InputEventMouseButton:
@@ -230,7 +338,8 @@ func save():
 		"parent" : get_parent().get_path(),
 		"pos_x" : position.x,
 		"pos_y" : position.y,
-		"titleName" : titleName
+		"titleName" : titleName,
+		"file" : file
 	}
 	return save_dict
 	
