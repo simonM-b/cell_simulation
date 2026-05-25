@@ -10,6 +10,8 @@ var isTouchingOtherCell = false
 
 const cellPreload = preload("res://scenes+scripts/cell.tscn")
 
+var listOfLines = []
+
 var colors = [
 ["RED", Color.RED], 
 ["ORANGE",Color.ORANGE], 
@@ -30,9 +32,7 @@ var ifIndex = [
 ]
 
 var ifNumber = -1
-
 var whileAliveOn = false
-
 var continueThis = []
 
 var listOfCommands = [
@@ -50,56 +50,73 @@ var listOfCommands = [
 func _ready() -> void:
 	randomize()
 
-func runFile():
+func resetValuesAndStartAnew():
 	whileAliveOn = false
 	continueThis.clear()
 	waitTimeNextLine = 0
+	isTouchingOtherCell = false
+	spawnedCell = false
+	listOfLines.clear()
 	
 	for i in $cells.get_children():
 		i.queue_free()
+
+func runLinesFromFile(from,to):
+	if to != "all":
+		#print("running all lines")
+		var id = 0
+		for line in listOfLines:
+			if id >= from and id <= to:
+				#print(line)
+				await wait(waitTimeNextLine)
+				waitTimeNextLine = 0
+				#print("Current line: ", line)
+				for command in listOfCommands:
+					#print(i)
+					if command[0] in line:
+						waitTimeNextLine = 0
+						command[1].call(line,id)
+						break
+			id += 1
+	else:
+		#print("running lines from",from,"to",to)
+		var id = 0
+		for line in listOfLines:
+			if id >= from:
+				#print(line)
+				await wait(waitTimeNextLine)
+				waitTimeNextLine = 0
+				#print("Current line: ", line)
+				for command in listOfCommands:
+					#print(i)
+					if command[0] in line:
+						waitTimeNextLine = 0
+						command[1].call(line,id)
+						break
+			id += 1
+
+func runFile():
+	resetValuesAndStartAnew()
 	
 	var file = FileAccess.open("user://cells/"+str(GLOBAL.currentScriptSavePath)+".slivercs", FileAccess.READ)
 	var content = file.get_as_text()
 	while not file.eof_reached():
-		var line = file.get_line()
-		
-		if whileAliveOn:
-			continueThis.append(str(line))
-		else:
-			continueThis.clear()
-			await wait(waitTimeNextLine)
-			#print("Current line: ", line)
-			for i in listOfCommands:
-				#print(i)
-				if i[0] in line:
-					waitTimeNextLine = 0
-					i[1].call(line)
-					break
-	if whileAliveOn:
-		for g in range(100):
-			print("wait is on")
-			for newLine in continueThis:
-				await wait(waitTimeNextLine)
-				waitTimeNextLine = 0
-				#print("Current line: ", line)
-				for i in listOfCommands:
-					#print(i)
-					if i[0] in newLine:
-						waitTimeNextLine = 0
-						i[1].call(newLine)
-						break
+		var fileLine = file.get_line()
+		listOfLines.append(fileLine)
+	
+	runLinesFromFile(0,"all")
 
 #START-------------------------------------------------START
 
-func nothing(line):
+func nothing(line,id):
 	return ""
 
-func spawnCell(line):
+func spawnCell(line,id):
 	print("cell spawned")
 	spawnedCell = cellPreload.instantiate()
 	$cells.add_child(spawnedCell)
 	
-func ifGameAsk(line):
+func ifGameAsk(line,id):
 	if spawnedCell:
 		print("if runing")
 		for i in possibleIfs:
@@ -111,14 +128,16 @@ func ifGameAsk(line):
 
 
 
-func whileAlive(line):
+func whileAlive(line,id):
 	if spawnedCell:
-		whileAliveOn = true
+		print("while alive")
+		while spawnedCell:
+			await runLinesFromFile(id+1,"all")
 	else:
 		print("running while")
 
 
-func setColor(line):
+func setColor(line,id):
 	if spawnedCell:
 		print("color set")
 		for i in colors:
@@ -129,27 +148,29 @@ func setColor(line):
 		print("error no cell")
 			
 			
-func randomMove(line):
+func randomMove(line,id):
 	print("cell moved")
 	var moveDir = ["N","S","W","E"]
 	var randomDir = moveDir[randi_range(0, 3)]
+	var tweenSpeed = 0.1
+	var tween = get_tree().create_tween()
 	if spawnedCell:
 		if randomDir == "N":
 			if spawnedCell.global_position.y > 0:
-				spawnedCell.position.y -= cellMoveAmount
+				tween.tween_property(spawnedCell, "position", Vector2(spawnedCell.position.x,spawnedCell.position.y - cellMoveAmount), tweenSpeed)
 		elif randomDir == "S":
 			if spawnedCell.global_position.y < 650:
-				spawnedCell.position.y += cellMoveAmount
+				tween.tween_property(spawnedCell, "position", Vector2(spawnedCell.position.x,spawnedCell.position.y + cellMoveAmount), tweenSpeed)
 		elif randomDir == "W":
 			if spawnedCell.global_position.x > 0:
-				spawnedCell.position.x -= cellMoveAmount
+				tween.tween_property(spawnedCell, "position", Vector2(spawnedCell.position.x - cellMoveAmount,spawnedCell.position.y), tweenSpeed)
 		elif randomDir == "E":
 			if spawnedCell.global_position.x < 1150:
-				spawnedCell.position.x += cellMoveAmount
+				tween.tween_property(spawnedCell, "position", Vector2(spawnedCell.position.x + cellMoveAmount,spawnedCell.position.y), tweenSpeed)
 	else:
 		print("error no cell")
 
-func getNumberValInLine4digits(line):
+func getNumberValInLine4digits(line,id):
 	var regex = RegEx.new()
 	regex.compile("[0-9]{1,4}")
 	var result = regex.search(str(line))
@@ -158,9 +179,9 @@ func getNumberValInLine4digits(line):
 	else:
 		return 0
 		
-func sleep(line):
+func sleep(line,id):
 	if spawnedCell:
-		waitTimeNextLine = getNumberValInLine4digits(line)
+		waitTimeNextLine = getNumberValInLine4digits(line,id)
 		print("sleeping",waitTimeNextLine)
 	else:
 		print("error no cell")
@@ -204,7 +225,6 @@ func _on_name_edit_text_changed(new_text: String) -> void:
 			
 			
 func save():
-	print("save called")
 	var save_dict = {
 		"filename" : get_scene_file_path(),
 		"parent" : get_parent().get_path(),
