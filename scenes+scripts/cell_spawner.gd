@@ -6,6 +6,7 @@ var titleName = ""
 var spawnedCell = false
 var cellMoveAmount = 40
 var waitTimeNextLine = 0
+var isTouchingOtherCell = false
 
 const cellPreload = preload("res://scenes+scripts/cell.tscn")
 
@@ -20,12 +21,28 @@ var colors = [
 ["BLACK",Color.BLACK]
 ]
 
+var possibleIfs = [
+	["touchingOtherCell()):",isTouchingOtherCell]
+]
+
+var ifIndex = [
+	
+]
+
+var ifNumber = -1
+
+var whileAliveOn = false
+
+var continueThis = []
 
 var listOfCommands = [
+	["#",Callable(self, "nothing")],
 	["spawnCell()",Callable(self, "spawnCell")],
 	["setColor(",Callable(self, "setColor")],
 	["randomMove()",Callable(self, "randomMove")],
-	["sleep(",Callable(self, "sleep")]
+	["sleep(",Callable(self, "sleep")],
+	["whileAlive@:",Callable(self, "whileAlive")],
+	["if(",Callable(self, "ifGameAsk")]
 ]
 
 
@@ -34,6 +51,10 @@ func _ready() -> void:
 	randomize()
 
 func runFile():
+	whileAliveOn = false
+	continueThis.clear()
+	waitTimeNextLine = 0
+	
 	for i in $cells.get_children():
 		i.queue_free()
 	
@@ -42,21 +63,60 @@ func runFile():
 	while not file.eof_reached():
 		var line = file.get_line()
 		
-		await wait(waitTimeNextLine)
-		#print("Current line: ", line)
-		for i in listOfCommands:
-			#print(i)
-			if i[0] in line:
+		if whileAliveOn:
+			continueThis.append(str(line))
+		else:
+			continueThis.clear()
+			await wait(waitTimeNextLine)
+			#print("Current line: ", line)
+			for i in listOfCommands:
+				#print(i)
+				if i[0] in line:
+					waitTimeNextLine = 0
+					i[1].call(line)
+					break
+	if whileAliveOn:
+		for g in range(100):
+			print("wait is on")
+			for newLine in continueThis:
+				await wait(waitTimeNextLine)
 				waitTimeNextLine = 0
-				i[1].call(line)
-				break
+				#print("Current line: ", line)
+				for i in listOfCommands:
+					#print(i)
+					if i[0] in newLine:
+						waitTimeNextLine = 0
+						i[1].call(newLine)
+						break
 
-#-------------------------------------------------
+#START-------------------------------------------------START
+
+func nothing(line):
+	return ""
 
 func spawnCell(line):
 	print("cell spawned")
 	spawnedCell = cellPreload.instantiate()
 	$cells.add_child(spawnedCell)
+	
+func ifGameAsk(line):
+	if spawnedCell:
+		print("if runing")
+		for i in possibleIfs:
+			if i[0] in line:
+				if i[1]:
+					pass
+	else:
+		print("error no cell")
+
+
+
+func whileAlive(line):
+	if spawnedCell:
+		whileAliveOn = true
+	else:
+		print("running while")
+
 
 func setColor(line):
 	if spawnedCell:
@@ -75,13 +135,17 @@ func randomMove(line):
 	var randomDir = moveDir[randi_range(0, 3)]
 	if spawnedCell:
 		if randomDir == "N":
-			spawnedCell.position.y -= cellMoveAmount
+			if spawnedCell.global_position.y > 0:
+				spawnedCell.position.y -= cellMoveAmount
 		elif randomDir == "S":
-			spawnedCell.position.y += cellMoveAmount
+			if spawnedCell.global_position.y < 650:
+				spawnedCell.position.y += cellMoveAmount
 		elif randomDir == "W":
-			spawnedCell.position.x -= cellMoveAmount
+			if spawnedCell.global_position.x > 0:
+				spawnedCell.position.x -= cellMoveAmount
 		elif randomDir == "E":
-			spawnedCell.position.x += cellMoveAmount
+			if spawnedCell.global_position.x < 1150:
+				spawnedCell.position.x += cellMoveAmount
 	else:
 		print("error no cell")
 
@@ -102,7 +166,7 @@ func sleep(line):
 		print("error no cell")
 		
 		
-#-------------------------------------------------
+#END-------------------------------------------------END
 
 func wait(seconds: float) -> void:
 	#print("WWW waiting",seconds)
@@ -113,6 +177,8 @@ func wait(seconds: float) -> void:
 func _process(delta: float) -> void:
 	if followCursor:
 		global_position = get_global_mouse_position()
+	if spawnedCell:
+		isTouchingOtherCell = spawnedCell.isTouchingOtherCell
 
 func _input(event):
 	if event is InputEventMouseButton:

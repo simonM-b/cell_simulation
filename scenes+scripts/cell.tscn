@@ -12,7 +12,10 @@ scale = Vector2(0.05, 0.05)
 texture = ExtResource("1_ohvt7")
 script = ExtResource("2_k32v7")
 
-[node name="Area2D" type="Area2D" parent="." unique_id=1297932401]
+[node name="Area2D" type="Area2D" parent="." unique_id=1297932401 groups=["cell"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1170085075]
 shape = SubResource("CircleShape2D_k32v7")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

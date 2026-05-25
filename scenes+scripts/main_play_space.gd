@@ -77,9 +77,7 @@ func save_game():
 		var json_string = JSON.stringify(node_data)
 
 		# Store the save dictionary as a new line in the save file.
-		print(json_string)
 		save_file.store_line(json_string)
-		print(GLOBAL.currentSavePath)
 		
 
 func load_game():
